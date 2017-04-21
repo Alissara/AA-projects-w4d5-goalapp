@@ -28,15 +28,35 @@ feature "the signup process" do
 end
 
 feature "logging in" do
+  subject(:user) { User.create(username: 'joe', password: 'password') }
+  # lazy!!!
   scenario "shows username on the homepage after login" do
+    visit new_session_url
+    fill_in 'username', with: user.username
+    fill_in 'password', with: 'password'
+    click_on 'Sign In'
+    # at bob's page
+    click_on 'All Users'
 
+    expect(page).to have_content("Logged in as: joe")
   end
 end
 
 feature "logging out" do
+  scenario "begins with a logged out state" do
+    visit users_url
+    expect(page).to_not have_content("Logged in as:")
+  end
 
-  scenario "begins with a logged out state"
-
-  scenario "doesn't show username on the homepage after logout"
+  scenario "doesn't show username on the homepage after logout" do
+    visit users_url
+    click_on 'Sign up!'
+    fill_in 'username', with: 'john'
+    fill_in 'password', with: 'password'
+    click_on 'Sign Up'
+    click_on 'Log out!'
+    expect(page).to have_content("All the Users!")
+    expect(page).to_not have_content("Logged in as:")
+  end
 
 end
