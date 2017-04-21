@@ -23,7 +23,6 @@ class UsersController < ApplicationController
       login(@user)
       redirect_to user_url(@user)
     else
-      debugger
       flash[:errors] = @user.errors.full_messages
       render :new
     end

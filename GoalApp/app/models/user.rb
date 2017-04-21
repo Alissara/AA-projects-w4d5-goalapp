@@ -18,6 +18,8 @@ class User < ApplicationRecord
 
   attr_reader :password
 
+  has_many :goals
+
   def self.find_by_credentials(username, password)
     user = User.find_by(username: username)
     return nil if user.nil?
@@ -38,6 +40,10 @@ class User < ApplicationRecord
     self.session_token = SecureRandom.urlsafe_base64(16)
     self.save
     self.session_token
+  end
+
+  def public_goals
+    self.goals.where(visibility: 'public')
   end
 
   private
